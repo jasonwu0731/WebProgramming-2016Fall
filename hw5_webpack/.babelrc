@@ -1,0 +1,4 @@
+// setting up .babelrc as usual...
+{
+      "presets": ["latest", "react"]
+}
