@@ -173,7 +173,7 @@ class TodoApp extends React.Component {
     return (
     	<div>
 	    	<section className="todoapp">
-				<Header value={this.state.txt} handleInput={this.handleInput} handleKeyDown={this.handleKeyDown} autofocus/>
+				<Header value={this.state.txt} handleInput={this.handleInput} handleKeyDown={this.props.handleKeyDown} autofocus/>
 				<section className="main">
 					<TodoItemHeader selectAll={this.selectAll} />
 					<ul className="todo-list" id="todolist">
