@@ -1,0 +1,3 @@
+[submodule "react-sortable-tree"]
+	path = react-sortable-tree
+	url = https://github.com/fritz-c/react-sortable-tree.git
