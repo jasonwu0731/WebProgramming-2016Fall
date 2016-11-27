@@ -7,7 +7,7 @@ import '../shared/favicon/favicon-16x16.png';
 import '../shared/favicon/favicon-32x32.png';
 import '../shared/favicon/favicon.ico';
 import '../shared/favicon/safari-pinned-tab.svg';
-import TodoApp from './TodoApp';
+import FileManage from './FileManage';
 
 const maxDepth = 10;
 
@@ -15,7 +15,6 @@ class PaperInput extends Component {
     render(){
         return(
             <header className='header'>
-                <h3>Input your paper information</h3>
                 <input
                     className={styles['new-todo']}
                     placeholder="paper name"
@@ -24,15 +23,21 @@ class PaperInput extends Component {
                 </input>
                 <input
                     className={styles['new-todo']}
-                    placeholder="paper author" 
+                    placeholder="paper author(s)" 
                     value = {this.props.paperAuthor}
                     onChange = {this.props.handleAuthor}>
                 </input>
                 <input
                     className={styles['new-todo']}
-                    placeholder="paper note" 
+                    placeholder="paper note (optional)" 
                     value = {this.props.paperNote}
                     onChange = {this.props.handleNote}>
+                </input>
+                <input
+                    className={styles['new-todo']}
+                    placeholder="paper link (optional)" 
+                    value = {this.props.paperLink}
+                    onChange = {this.props.handleLink}>
                 </input>
                 <button onClick={this.props.handleInput}>Add</button>
             </header> 
@@ -50,7 +55,7 @@ class App extends Component {
             namePaper: '', 
             author: '', 
             note: '', 
-            parentNode: '',
+            link: '', 
             searchString: '',
             searchFocusIndex: 0,
             searchFoundCount: null,
@@ -65,6 +70,7 @@ class App extends Component {
         this.handleName = this.handleName.bind(this);
         this.handleAuthor = this.handleAuthor.bind(this);
         this.handleNote = this.handleNote.bind(this);
+        this.handleLink = this.handleLink.bind(this);
         this.updateTxt = this.updateTxt.bind(this);
     }
  
@@ -90,12 +96,26 @@ class App extends Component {
     }
 
     handleInput(){
-        var dataCurrent =  {title: this.state.namePaper, subtitle: this.state.author , expanded: true};
-        console.log(dataCurrent)
-        this.setState({ treeData:  this.state.treeData.concat(dataCurrent) });
-        this.setState({ namePaper: '' });
-        this.setState({ author: '' });
-        this.setState({ note: '' });
+        var dataCurrent =  {
+            title: this.state.namePaper, subtitle: this.state.author, 
+            expanded: true, note: this.state.note, link: this.state.link,
+        };
+        //console.log(dataCurrent)
+        if (this.state.namePaper != '' && this.state.author != ''){
+            this.setState({ treeData:  this.state.treeData.concat(dataCurrent) });
+            this.setState({ namePaper: '' });
+            this.setState({ author: '' });
+            this.setState({ note: '' });
+            this.setState({ link: '' });
+        }
+        else {
+            if(this.state.namePaper == '' && this.state.author == '')
+                alert('Paper name and author(s) cannot be empty!');
+            else if (this.state.namePaper == '' )
+                alert('Paper name cannot be empty!');
+            else
+                alert('Paper author(s) cannot be empty!');
+        }
     }
 
     updateTxt(in_txt, which){
@@ -106,7 +126,7 @@ class App extends Component {
         else if (which === 3)
             this.setState({note: in_txt});
         else if (which === 4)
-            this.setState({parentNode: in_txt});
+            this.setState({link: in_txt});
     }
 
     handleName(w) {
@@ -119,11 +139,15 @@ class App extends Component {
         this.updateTxt(w.target.value, 3);
     }
 
+    handleLink(w) {
+        this.updateTxt(w.target.value, 4);
+    }
+
     render() {
         const projectName = 'PaperNet';
         const authorName = 'Chien-Sheng Wu';
         const authorUrl = 'https://github.com/fritz-c';
-        const githubUrl = '';
+        const githubUrl = 'https://github.com/jasonwu0731/WebProgramming-2016Fall/tree/master/InClassHackathon';
 
         const {
             treeData,
@@ -138,16 +162,38 @@ class App extends Component {
             treeIndex,
             lowerSiblingCounts: _lowerSiblingCounts,
         }) => {
+            
             const objectString = Object.keys(node)
                 .map(k => (k === 'children' ? 'children: Array' : `${k}: '${node[k]}'`))
                 .join(`,\n   `);
 
+            console.log(node)
+
             alert( // eslint-disable-line no-alert
-                `Info passed to the button generator:\n\n` +
-                `node: {\n   ${objectString}\n},\n` +
-                `path: [${path.join(', ')}],\n` +
-                `treeIndex: ${treeIndex}`
+                //`Info passed to the button generator:\n\n` +
+                //`node: {\n   ${objectString}\n},\n` +
+                //`path: [${path.join(', ')}],\n` +
+                //`treeIndex: ${treeIndex}, \n` +
+                `Note: ${node.note}`
             );
+        };
+
+        var linkPaper = ({
+            node,
+            path,
+            treeIndex,
+            lowerSiblingCounts: _lowerSiblingCounts,
+        }) => {
+            let url='';
+            //console.log('url'+node.ink)
+            if (node.link == '')
+                url = 'http://www.google.com.tw'
+            else if (node.link[0] != 'h')
+                url = 'http://'+node.link
+            else
+                url = node.link
+
+            open(url);
         };
 
         const selectPrevMatch = () => this.setState({
@@ -171,19 +217,20 @@ class App extends Component {
                     <h2 className={styles['project-tagline']}>
                         Drag-and-drop to organize your research works
                     </h2>
+
                 </section>
 
                 <PaperInput  handleInput={this.handleInput} 
                     paperName={this.state.namePaper} 
                     paperAuthor={this.state.author} 
                     paperNote={this.state.note} 
+                    paperLink={this.state.link}
                     handleName={this.handleName} 
                     handleAuthor={this.handleAuthor} 
-                    handleNote={this.handleNote}/>
+                    handleNote={this.handleNote}
+                    handleLink={this.handleLink}/>
 
                 <section className={styles['main-content']}>
-                    <h3>Demo</h3>
-
                     <button onClick={this.expandAll}>
                         Expand All
                     </button>
@@ -257,9 +304,11 @@ class App extends Component {
                                     >
                                         ℹ
                                     </button>,
+                                    <button onClick={() => linkPaper(rowInfo)}>
+                                    link
+                                    </button>
                                 ],
-                            })}
-                        />
+                            })} />
                     </div>
 
                     <a href={githubUrl}>Documentation on Github</a>
