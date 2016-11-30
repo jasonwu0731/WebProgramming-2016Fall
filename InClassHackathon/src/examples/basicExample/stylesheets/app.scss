@@ -15,7 +15,7 @@ body {
 }
 
 .new-todo {
-	width: 100%;
+	width: 80%;
     padding: 12px 20px;
     margin: 8px 0;
     box-sizing: border-box;
@@ -26,6 +26,16 @@ button {
     border: none;
     color: white;
     padding: 8px 16px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.del_btn {
+    background-color: #DDDDDD;
+    border: none;
+    color: white;
+    padding: 4px 8px;
     text-decoration: none;
     margin: 4px 2px;
     cursor: pointer;

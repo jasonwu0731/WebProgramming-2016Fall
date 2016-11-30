@@ -39,7 +39,7 @@ class PaperInput extends Component {
                     value = {this.props.paperLink}
                     onChange = {this.props.handleLink}>
                 </input>
-                <button onClick={this.props.handleInput}>Add</button>
+                <button onClick={this.props.handleInput}>Add paper</button>
             </header> 
         )
     }
@@ -59,7 +59,31 @@ class App extends Component {
             searchString: '',
             searchFocusIndex: 0,
             searchFoundCount: null,
-            treeData: [],
+            treeData: [
+                {
+                    title: 'Value Iteration Networks', 
+                    subtitle: 'Aviv Tamar, Yi Wu, Garrett Thomas, Sergey Levine, Pieter Abbeel', 
+                    expanded: true, 
+                    note: 'Neural Information Processing Systems (NIPS), Barcelona, Spain, December 2016', 
+                    link: 'https://arxiv.org/abs/1602.02867',
+                    children: [
+                        {
+                            title: 'RL2: Fast Reinforcement Learning via Slow Reinforcement Learning', 
+                            subtitle: 'Yan (Rocky) Duan, John Schulman, Xi (Peter) Chen, Pieter Abbeel', 
+                            expanded: true, 
+                            note: '', 
+                            link: 'https://arxiv.org/abs/1611.02779',
+                        }
+                    ],
+                },
+                {
+                    title: 'Benchmarking Deep Reinforcement Learning for Continuous Control', 
+                    subtitle: 'Yan Duan, Xi Chen, Rein Houthooft, John Schulman, Pieter Abbeel', 
+                    expanded: true, 
+                    note: 'In the proceedings of the International Conference on Machine Learning (ICML), 2016', 
+                    link: 'http://arxiv.org/abs/1604.06778',
+                },
+            ],
         };
 
         this.updateTreeData = this.updateTreeData.bind(this);
@@ -72,6 +96,8 @@ class App extends Component {
         this.handleNote = this.handleNote.bind(this);
         this.handleLink = this.handleLink.bind(this);
         this.updateTxt = this.updateTxt.bind(this);
+
+        this.handleDelete = this.handleDelete.bind(this);
     }
  
     updateTreeData(treeData) {
@@ -141,6 +167,10 @@ class App extends Component {
 
     handleLink(w) {
         this.updateTxt(w.target.value, 4);
+    }
+
+    handleDelete(rowInfo){
+        console.log('Did not Implemented')
     }
 
     render() {
@@ -283,7 +313,7 @@ class App extends Component {
 
                     <div style={{ height: 450 }}>
                         <SortableTree
-                            treeData={treeData}
+                            treeData={this.state.treeData}
                             onChange={this.updateTreeData}
                             maxDepth={maxDepth}
                             searchQuery={searchString}
@@ -304,9 +334,8 @@ class App extends Component {
                                     >
                                         ℹ
                                     </button>,
-                                    <button onClick={() => linkPaper(rowInfo)}>
-                                    link
-                                    </button>
+                                    <button onClick={() => linkPaper(rowInfo)}>link</button>,
+                                    <button className={styles['del_btn']} onClick={() => this.handleDelete(rowInfo)}>x</button>
                                 ],
                             })} />
                     </div>
